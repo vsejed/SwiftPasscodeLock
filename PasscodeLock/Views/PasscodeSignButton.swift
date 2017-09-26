@@ -9,28 +9,23 @@
 import UIKit
 
 @IBDesignable
-public class PasscodeSignButton: UIButton {
+open class PasscodeSignButton: UIButton {
     
     @IBInspectable
-    public var passcodeSign: String = "1"
+    open var passcodeSign: String = "1"
     
     @IBInspectable
-    public var borderColor: UIColor = UIColor.whiteColor() {
+    open var borderColor: UIColor = UIColor.white {
         didSet {
             setupView()
         }
     }
+
     
     @IBInspectable
-    public var borderRadius: CGFloat = 30 {
+    open var highlightBackgroundColor: UIColor = UIColor.clear {
         didSet {
-            setupView()
-        }
-    }
-    
-    @IBInspectable
-    public var highlightBackgroundColor: UIColor = UIColor.clearColor() {
-        didSet {
+
             setupView()
         }
     }
@@ -46,33 +41,34 @@ public class PasscodeSignButton: UIButton {
     public required init?(coder aDecoder: NSCoder) {
         
         super.init(coder: aDecoder)
-        
         setupActions()
     }
+
+    fileprivate var defaultBackgroundColor = UIColor.clear
     
-    public override func intrinsicContentSize() -> CGSize {
-        
-        return CGSizeMake(60, 60)
-    }
-    
-    private var defaultBackgroundColor = UIColor.clearColor()
-    
-    private func setupView() {
+    fileprivate func setupView() {
         
         layer.borderWidth = 1
-        layer.cornerRadius = borderRadius
-        layer.borderColor = borderColor.CGColor
+        //self.layer.cornerRadius = self.frame.width/2
+        layer.borderColor = borderColor.cgColor
         
         if let backgroundColor = backgroundColor {
             
             defaultBackgroundColor = backgroundColor
         }
     }
+
+    override open func draw(_ rect: CGRect) {
+        super.draw(rect)
+        self.layer.cornerRadius = rect.width/2
+    }
+
+
     
-    private func setupActions() {
+    fileprivate func setupActions() {
         
-        addTarget(self, action: Selector("handleTouchDown"), forControlEvents: .TouchDown)
-        addTarget(self, action: Selector("handleTouchUp"), forControlEvents: [.TouchUpInside, .TouchDragOutside, .TouchCancel])
+        addTarget(self, action: #selector(PasscodeSignButton.handleTouchDown), for: .touchDown)
+        addTarget(self, action: #selector(PasscodeSignButton.handleTouchUp), for: [.touchUpInside, .touchDragOutside, .touchCancel])
     }
     
     func handleTouchDown() {
@@ -85,17 +81,17 @@ public class PasscodeSignButton: UIButton {
         animateBackgroundColor(defaultBackgroundColor)
     }
     
-    private func animateBackgroundColor(color: UIColor) {
+    fileprivate func animateBackgroundColor(_ color: UIColor) {
         
-        UIView.animateWithDuration(
-            0.3,
+        UIView.animate(
+            withDuration: 0.3,
             delay: 0.0,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 0.0,
-            options: [.AllowUserInteraction, .BeginFromCurrentState],
+            options: [.allowUserInteraction, .beginFromCurrentState],
             animations: {
                 
-                self.backgroundColor = color
+                self.layer.backgroundColor = color.cgColor
             },
             completion: nil
         )
