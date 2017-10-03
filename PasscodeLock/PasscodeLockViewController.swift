@@ -102,7 +102,7 @@ open class PasscodeLockViewController: UIViewController, PasscodeLockTypeDelegat
         
         titleLabel?.text = passcodeLock.state.title
         descriptionLabel?.text = passcodeLock.state.description
-        cancelButton?.isHidden = !passcodeLock.state.isCancellableAction
+        cancelButton?.isEnabled = !passcodeLock.state.isCancellableAction
         touchIDButton?.isHidden = !passcodeLock.isTouchIDAllowed
     }
     
