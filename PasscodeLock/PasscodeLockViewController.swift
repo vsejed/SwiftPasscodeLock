@@ -27,6 +27,8 @@ open class PasscodeLockViewController: UIViewController, PasscodeLockTypeDelegat
         }
     }
     
+    @IBOutlet weak var backgroundView: UIView!
+    var backgroundSubView: UIView?
     @IBOutlet open weak var titleLabel: UILabel?
     @IBOutlet open weak var descriptionLabel: UILabel?
     @IBOutlet open var placeholders: [PasscodeSignPlaceholderView] = [PasscodeSignPlaceholderView]()
@@ -64,9 +66,10 @@ open class PasscodeLockViewController: UIViewController, PasscodeLockTypeDelegat
         notificationCenter = NotificationCenter.default
     }
     
-    public convenience init(state: LockState, configuration: PasscodeLockConfigurationType, animateOnDismiss: Bool = true) {
-        
+    public convenience init(state: LockState, configuration: PasscodeLockConfigurationType, animateOnDismiss: Bool = true, backgroundView: UIView = UIView()) {
+
         self.init(state: state.getState(), configuration: configuration, animateOnDismiss: animateOnDismiss)
+        self.backgroundSubView = backgroundView
     }
     
     public required init(coder aDecoder: NSCoder) {
@@ -85,6 +88,10 @@ open class PasscodeLockViewController: UIViewController, PasscodeLockTypeDelegat
         
         updatePasscodeView()
         deleteSignButton?.isEnabled = false
+        
+        if let backgroundSubView = backgroundSubView {
+            backgroundView.addSubview(backgroundSubView)
+        }
         
         setupEvents()
     }
@@ -185,6 +192,11 @@ open class PasscodeLockViewController: UIViewController, PasscodeLockTypeDelegat
         dismissCompletionCallback?()
         
         completionHandler?()
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        backgroundSubView?.frame = backgroundView.frame
     }
     
     // MARK: - Animations
